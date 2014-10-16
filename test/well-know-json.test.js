@@ -35,7 +35,7 @@ describe('wkj', function() {
         };
 
         var app = express();
-        app.use(wkj(options));
+        app.use(wkj(options, {foo: {}}));
 
         app.use(function(err, req, res, next) {
             expect(err).to.be.ok;
@@ -47,6 +47,19 @@ describe('wkj', function() {
         request(app)
             .get('/.well-known/foo')
             .expect(404, done);
+    });
+
+    it('should pass unknown requests to next middleware', function(done) {
+        var app = express();
+        app.use(wkj({}));
+
+        app.use(function(req, res) {
+            res.status(200).end();
+        });
+
+        request(app)
+            .get('/.well-known/foo')
+            .expect(200, done);
     });
 
     it('should serve resources provided at mount', function(done) {
@@ -118,5 +131,109 @@ describe('wkj', function() {
             .get('/.well-known/foo')
             .expect('Content-Type', /json/)
             .expect(200, done);
+    });
+
+    it('should return Not Acceptable for non-JSON Accept', function(done) {
+        var resource = {
+            bar: 'hello world',
+            baz: 7
+        };
+        var app = express();
+        var middleware = wkj({});
+        app.use(middleware);
+
+        middleware.addResource('foo', resource);
+
+        request(app)
+            .get('/.well-known/foo')
+            .set('Accept', 'application/xml')
+            .expect(406, done);
+    });
+
+    it('should resolve relative URIs to absolute', function(done) {
+        var resource = {
+            uri: './thing'
+        };
+        var app = express();
+        var middleware = wkj({baseUri: 'http://example.com'});
+        app.use(middleware);
+
+        middleware.addResource('foo', resource);
+
+        request(app)
+            .get('/.well-known/foo')
+            .expect(function(res) {
+                return res.body.uri !== 'http://example.com/thing';
+            })
+            .end(done);
+    });
+
+    it('should work with array properties', function(done) {
+        var resource = {
+            arr: [1, 2, 3]
+        };
+        var app = express();
+        var middleware = wkj({});
+        app.use(middleware);
+
+        middleware.addResource('foo', resource);
+
+        request(app)
+            .get('/.well-known/foo')
+            .expect(function(res) {
+                return Object.prototype.toString.call(res.body.arr) !==
+                    '[object Array]';
+            })
+            .end(done);
+    });
+
+    it('should evaluate function properties', function(done) {
+        var resource = {
+            fun: function() {
+                return 'FUN_RETURN';
+            }
+        };
+        var app = express();
+        var middleware = wkj({});
+        app.use(middleware);
+
+        middleware.addResource('foo', resource);
+
+        request(app)
+            .get('/.well-known/foo')
+            .expect(function(res) {
+                return res.body.fun !== 'FUN_RETURN';
+            })
+            .end(done);
+    });
+
+    it('should recursively handle nested object properties', function(done) {
+        var resource = {
+            obj: {
+                obj: {
+                    uri: './thing',
+                    arr: [1, 2, 3],
+                    fun: function() {
+                        return 'FUN_RETURN';
+                    }
+                }
+            }
+        };
+        var app = express();
+        var middleware = wkj({baseUri: 'http://example.com'});
+        app.use(middleware);
+
+        middleware.addResource('foo', resource);
+
+        request(app)
+            .get('/.well-known/foo')
+            .expect(function(res) {
+                return !(
+                    res.body.obj.obj.uri === 'http://example.com/thing' &&
+                    Object.prototype.toString.call(res.body.obj.obj.arr) ===
+                        '[object Array]' &&
+                    res.body.obj.obj.fun === 'FUN_RETURN');
+            })
+            .end(done);
     });
 });

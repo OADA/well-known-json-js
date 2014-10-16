@@ -35,7 +35,7 @@ function wellKnownJSON(options, resources) {
         }
 
         corsMiddleware(req, res, function(err) {
-            if (err) { next(err); }
+            if (err) { return next(err); }
 
             if (!req.accepts('json')) {
                 return res.status(406).send('Not Acceptable');
@@ -48,9 +48,7 @@ function wellKnownJSON(options, resources) {
             var out = {};
 
             for (var key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    out[key] = resourceifyify(obj[key]);
-                }
+                out[key] = resourceifyify(obj[key]);
             }
 
             return out;
