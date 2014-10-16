@@ -1,5 +1,5 @@
 {
-  "name": "well-known-json-js",
+  "name": "well-known-json",
   "version": "0.0.1",
   "description": "Middleware for JSON Well-Known resources",
   "keywords": [
