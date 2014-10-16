@@ -1,0 +1,52 @@
+{
+  "name": "well-known-json-js",
+  "version": "0.0.1",
+  "description": "Middleware for JSON Well-Known resources",
+  "keywords": [
+    "OADA",
+    "oada",
+    "Open Ag Data Alliance",
+    "well-known",
+    "JSON",
+    "json"
+  ],
+  "homepage": "https://github.com/OADA/well-known-json-js",
+  "bugs": {
+    "url": "https://github.com/OADA/well-known-json-js/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "Alex Layton <alex@layton.in> (http://alex.layton.in)",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OADA/well-known-json-js.git"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha -w",
+    "cover": "./node_modules/.bin/istanbul cover --preload-sources -x gulpfile.js -x examples/*.js node_modules/.bin/_mocha -- -R spec",
+    "clean": "rm -rf ./coverage",
+    "minimal": "node examples/minimal.js"
+  },
+  "dependencies": {
+    "URIjs": "^1.14.1",
+    "cors": "^2.4.2",
+    "object-assign": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "coveralls": "~2.11.2",
+    "express": "^4.9.6",
+    "gulp": "3.8.8",
+    "gulp-jscs": "~1.1.2",
+    "gulp-jshint": "~1.8.4",
+    "istanbul": "~0.3.2",
+    "jscs": "~1.6.2",
+    "jshint": "~2.5.6",
+    "jshint-stylish": "~1.0.0",
+    "mocha": "~1.21.4",
+    "supertest": "^0.14.0"
+  }
+}
