@@ -1,15 +1,21 @@
 language: node_js
 node_js:
-  - "0.10"
-  - "0.11"
-
+- '0.10'
+- '0.11'
+deploy:
+  provider: npm
+  email: alex@layton.in
+  api_key:
+    secure: dF5dKHzvoMVeRNL/3vt87XFPgbJEr1CGX/Gwy/udv5EyqodXHoS7VdM9EWL+m93Gz1Xe6c9286Tf/ctz81d5enmwb35tZSBMpDyeBuSTh8WVYAAnW5Ey8hTjvSAQTsTHbf82ZvYXqzcSa9drGTilrmvNWGy5TlEkZOSbuhHZkGA=
+  on:
+    tags: true
+    all_branches: true
+    repo: OADA/well-known-json-js
 before_install:
-  - npm install -g gulp
-
+- npm install -g gulp
 script:
-  - gulp lint
-  - gulp style
-  - npm run cover
-
+- gulp lint
+- gulp style
+- npm run cover
 after_success:
-  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls --verbose
+- cat ./coverage/lcov.info | ./node_modules/.bin/coveralls --verbose
