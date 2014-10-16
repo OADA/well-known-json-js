@@ -75,7 +75,7 @@ function wellKnownJSON(options, resources) {
                     break;
                 case 'function':
                     /* Call functions */
-                    out = resourceifyify(val());
+                    out = resourceifyify(val(req, res));
                     break;
                 }
 
