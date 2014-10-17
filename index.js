@@ -26,6 +26,8 @@ function wellKnownJSON(options, resources) {
     var json = objectAssign({}, resources || {});
     var corsMiddleware = cors(options && options.cors || {});
 
+    options = options || {};
+
     var middleware = function(req, res, next) {
         var m = req.path.match(WELL_KNOWN);
         var base = options.baseUri || req.protocol + '://' + req.headers.host;
