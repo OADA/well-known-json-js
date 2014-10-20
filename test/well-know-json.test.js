@@ -168,6 +168,26 @@ describe('wkj', function() {
             .end(done);
     });
 
+    it('should respect X-Forward-Proto', function(done) {
+        var resource = {
+            uri: './thing'
+        };
+        var app = express();
+        var middleware = wkj({});
+        app.use(middleware);
+
+        middleware.addResource('foo', resource);
+
+        request(app)
+            .get('/.well-known/foo')
+            .set('X-Forwarded-Proto', 'test')
+            .expect(function(res) {
+                return res.body.uri !== 'test://' + res.req._headers.host +
+                    '/thing';
+            })
+            .end(done);
+    });
+
     it('should work with array properties', function(done) {
         var resource = {
             arr: [1, 2, 3]
