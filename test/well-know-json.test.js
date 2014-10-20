@@ -51,7 +51,7 @@ describe('wkj', function() {
 
     it('should pass unknown requests to next middleware', function(done) {
         var app = express();
-        app.use(wkj({}));
+        app.use(wkj());
 
         app.use(function(req, res) {
             res.status(200).end();
@@ -83,7 +83,7 @@ describe('wkj', function() {
             baz: 7
         };
         var app = express();
-        var middleware = wkj({});
+        var middleware = wkj();
         app.use(middleware);
 
         middleware.addResource('foo', resource);
@@ -122,7 +122,7 @@ describe('wkj', function() {
             baz: 7
         };
         var app = express();
-        var middleware = wkj({});
+        var middleware = wkj();
         app.use(middleware);
 
         middleware.addResource('foo', resource);
@@ -139,7 +139,7 @@ describe('wkj', function() {
             baz: 7
         };
         var app = express();
-        var middleware = wkj({});
+        var middleware = wkj();
         app.use(middleware);
 
         middleware.addResource('foo', resource);
@@ -193,7 +193,7 @@ describe('wkj', function() {
             arr: [1, 2, 3]
         };
         var app = express();
-        var middleware = wkj({});
+        var middleware = wkj();
         app.use(middleware);
 
         middleware.addResource('foo', resource);
@@ -214,7 +214,7 @@ describe('wkj', function() {
             }
         };
         var app = express();
-        var middleware = wkj({});
+        var middleware = wkj();
         app.use(middleware);
 
         middleware.addResource('foo', resource);
