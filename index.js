@@ -30,7 +30,9 @@ function wellKnownJSON(options, resources) {
 
     var middleware = function(req, res, next) {
         var m = req.path.match(WELL_KNOWN);
-        var base = options.baseUri || req.protocol + '://' + req.headers.host;
+        var base = options.baseUri ||
+                (req.headers['x-forwarded-proto'] || req.protocol) + '://' +
+                req.headers.host;
 
         if (!m || !m[1] || !json[m[1]]) {
             return next();
