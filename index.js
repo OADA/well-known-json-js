@@ -32,7 +32,7 @@ function wellKnownJSON(options, resources) {
         var m = req.path.match(WELL_KNOWN);
         var base = options.baseUri ||
                 (req.headers['x-forwarded-proto'] || req.protocol) + '://' +
-                req.headers.host;
+                (req.headers['x-forwarded-host'] || req.headers.host);
 
         if (!m || !m[1] || !json[m[1]]) {
             return next();
