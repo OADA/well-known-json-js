@@ -168,7 +168,7 @@ describe('wkj', function() {
             .end(done);
     });
 
-    it('should respect X-Forward-Proto', function(done) {
+    it('should respect X-Forwarded-Proto', function(done) {
         var resource = {
             uri: './thing'
         };
@@ -184,6 +184,25 @@ describe('wkj', function() {
             .expect(function(res) {
                 return res.body.uri !== 'test://' + res.req._headers.host +
                     '/thing';
+            })
+            .end(done);
+    });
+
+    it('should respect X-Forwarded-Host', function(done) {
+        var resource = {
+            uri: './thing'
+        };
+        var app = express();
+        var middleware = wkj({});
+        app.use(middleware);
+
+        middleware.addResource('foo', resource);
+
+        request(app)
+            .get('/.well-known/foo')
+            .set('X-Forwarded-Host', 'test.test:7')
+            .expect(function(res) {
+                return res.body.uri !== 'http://test.test:7/thing';
             })
             .end(done);
     });
