@@ -4,6 +4,7 @@ node_js:
 - '0.11'
 - '0.12'
 - iojs
+sudo: false
 deploy:
   provider: npm
   email: alex@layton.in
