@@ -1,6 +1,6 @@
 {
   "name": "well-known-json",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Middleware for JSON Well-Known resources",
   "keywords": [
     "OADA",
