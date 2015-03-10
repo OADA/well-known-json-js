@@ -52,7 +52,10 @@ function wellKnownJSON(options, resources) {
             var out = {};
 
             for (var key in obj) {
-                out[key] = resourceifyify(obj[key]);
+                /* istanbul ignore else */
+                if (obj.hasOwnProperty(key)) {
+                    out[key] = resourceifyify(obj[key]);
+                }
             }
 
             return out;

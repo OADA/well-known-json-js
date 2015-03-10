@@ -18,8 +18,7 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 
-var files = ['gulpfile.js', 'clientDiscovery.js', 'test/**/*.js',
-                         'examples/**/*.js'];
+var files = '**/*.js';
 
 gulp.task('default', ['lint', 'style', 'watch']);
 
