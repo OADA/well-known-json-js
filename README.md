@@ -9,7 +9,7 @@ Status](https://david-dm.org/oada/well-known-json-js.svg)](https://david-dm.org/
 # well-known-json #
 
 ## Illustraive usage example ##
-```Javascript
+```javascript
 var app = require('express')();
 var wkj = require('well-known-json');
 
