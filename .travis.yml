@@ -6,12 +6,15 @@ node_js:
 - node
 - iojs
 sudo: false
+before_deploy:
+- npm install -g npm
 deploy:
   provider: npm
   email: alex@layton.in
   api_key:
     secure: dF5dKHzvoMVeRNL/3vt87XFPgbJEr1CGX/Gwy/udv5EyqodXHoS7VdM9EWL+m93Gz1Xe6c9286Tf/ctz81d5enmwb35tZSBMpDyeBuSTh8WVYAAnW5Ey8hTjvSAQTsTHbf82ZvYXqzcSa9drGTilrmvNWGy5TlEkZOSbuhHZkGA=
   on:
+    node: node
     tags: true
     all_branches: true
     repo: OADA/well-known-json-js

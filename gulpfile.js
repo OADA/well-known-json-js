@@ -12,13 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 'use strict';
 
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
 
-var files = '**/*.js';
+var files = ['**/*.js', '!coverage/**/*.js', '!node_modules/**/*.js'];
 
 gulp.task('default', ['lint', 'style', 'watch']);
 
