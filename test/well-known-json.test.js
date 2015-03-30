@@ -276,4 +276,34 @@ describe('wkj', function() {
                 .end(done);
         });
     });
+
+    describe('HTTP method support', function() {
+        beforeEach(function() {
+            var middleware = wkj({}, {foo: {a:1, b:2}});
+            app.use(middleware);
+        });
+
+        it('should allow OPTIONS', function(done) {
+            request(app).options('/.well-known/foo').expect(204, done);
+        });
+
+        ['get', 'head'].forEach(function(meth) {
+            it('should allow ' + meth.toUpperCase(), function(done) {
+                request(app)[meth]('/.well-known/foo').expect(200, done);
+            });
+        });
+
+        ['put', 'post', 'patch', 'delete'].forEach(function(meth) {
+            it('should not allow ' + meth.toUpperCase(), function(done) {
+                /* jshint unused: vars */
+                app.use(function(err, req, res, next) {
+                    expect(err.status).to.equal(405);
+                    done();
+                });
+                /* jshint unused: true */
+
+                request(app)[meth]('/.well-known/foo').end();
+            });
+        });
+    });
 });

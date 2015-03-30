@@ -18,17 +18,30 @@
 var objectAssign = require('object-assign');
 var URI = require('URIjs');
 var cors = require('cors');
+var allow = require('allow-methods');
 
 var WELL_KNOWN = /^\/\.well-known\/(.*)/;
 var RELATIVE = /^\.\.?\//;
+var METHODS = ['OPTIONS', 'GET', 'HEAD'];
+
+function makeCorsOpts(opts) {
+    return objectAssign({methods: METHODS}, opts || {});
+}
 
 function wellKnownJSON(options, resources) {
     var json = objectAssign({}, resources || {});
     options = options || {};
-    var corsOptions = objectAssign({methods: 'GET,HEAD'}, options.cors || {});
+    var corsOptions = typeof options.cors === 'function' ?
+        function(req, callback) {
+            options.cors(req, function(err, opts) {
+                callback(err, makeCorsOpts(opts));
+            });
+        } :
+        makeCorsOpts(options.cors);
+    var allowMiddleware = allow(METHODS);
     var corsMiddleware = cors(corsOptions);
 
-    var middleware = function(req, res, next) {
+    var middleware = function wkjMiddleware(req, res, next) {
         var m = req.path.match(WELL_KNOWN);
         var base = options.baseUri ||
                 (req.headers['x-forwarded-proto'] || req.protocol) + '://' +
@@ -38,14 +51,17 @@ function wellKnownJSON(options, resources) {
             return next();
         }
 
-        corsMiddleware(req, res, function(err) {
+        allowMiddleware(req, res, function(err) {
             if (err) { return next(err); }
+            corsMiddleware(req, res, function(err) {
+                if (err) { return next(err); }
 
-            if (!req.accepts('json')) {
-                return res.status(406).send('Not Acceptable');
-            }
+                if (!req.accepts('json')) {
+                    return res.status(406).send('Not Acceptable');
+                }
 
-            return res.json(resourceify(json[m[1]]));
+                return res.json(resourceify(json[m[1]]));
+            });
         });
 
         function resourceify(obj) {
