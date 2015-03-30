@@ -24,9 +24,9 @@ var RELATIVE = /^\.\.?\//;
 
 function wellKnownJSON(options, resources) {
     var json = objectAssign({}, resources || {});
-    var corsMiddleware = cors(options && options.cors || {});
-
     options = options || {};
+    var corsOptions = objectAssign({methods: 'GET,HEAD'}, options.cors || {});
+    var corsMiddleware = cors(corsOptions);
 
     var middleware = function(req, res, next) {
         var m = req.path.match(WELL_KNOWN);

@@ -55,7 +55,7 @@ wkjMiddleware.addResource('baz', {
 ```
 
 ## Features ##
-* Enables CORS for its corresponding JSON documents
+* Enables CORS (including pre-flight) for its corresponding JSON documents
 * Converts relative URIs to absolute
 * Can have functions "in the documents" which get evaluated for each request
 * Supports de-facto standard for reverse proxies (i.e. X-Forwarded-* headers)
