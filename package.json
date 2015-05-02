@@ -2,44 +2,46 @@
   "name": "well-known-json",
   "version": "0.1.2",
   "description": "Middleware for JSON Well-Known resources",
-  "keywords": [
-    "OADA",
-    "oada",
-    "Open Ag Data Alliance",
-    "well-known",
-    "JSON",
-    "json"
-  ],
-  "homepage": "https://github.com/OADA/well-known-json-js",
-  "bugs": {
-    "url": "https://github.com/OADA/well-known-json-js/issues"
-  },
-  "license": "Apache-2.0",
-  "author": {
-    "name": "Alex Layton",
-    "email": "alex@layton.in",
-    "url": "http://alex.layton.in"
-  },
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/OADA/well-known-json-js.git"
-  },
-  "engines": {
-    "node": ">=0.10"
-  },
   "scripts": {
-    "test": "mocha -w",
+    "test": "mocha",
     "cover": "istanbul cover _mocha",
     "lint": "jshint --reporter node_modules/jshint-stylish/stylish.js .",
     "style": "jscs .",
     "clean": "rm -rf ./coverage",
     "minimal": "node examples/minimal.js"
   },
+  "pre-commit": [
+    "lint",
+    "style",
+    "test"
+  ],
   "directories": {
     "test": "test",
     "example": "examples"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OADA/well-known-json-js.git"
+  },
+  "keywords": [
+    "oada",
+    "OADA",
+    "Open Ag Data Alliance",
+    "well-known",
+    "JSON",
+    "json"
+  ],
+  "author": {
+    "name": "Alex Layton",
+    "email": "alex@layton.in",
+    "url": "http://alex.layton.in"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/OADA/well-known-json-js/issues"
+  },
+  "homepage": "https://github.com/OADA/well-known-json-js",
   "dependencies": {
     "URIjs": "^1.14.1",
     "allow-methods": "^1.0.0",
@@ -47,16 +49,14 @@
     "object-assign": ">=1.0.0"
   },
   "devDependencies": {
-    "chai": "^2.2.0",
-    "express": "^4.9.6",
-    "gulp": "^3.8.11",
-    "gulp-jscs": "^1.4.0",
-    "gulp-jshint": "^1.9.4",
-    "istanbul": "^0.3.11",
-    "jscs": "^1.12.0",
-    "jshint": "^2.6.3",
+    "chai": "^2.3.0",
+    "istanbul": "^0.3.13",
+    "jscs": "^1.13.1",
+    "jshint": "^2.7.0",
     "jshint-stylish": "^1.0.1",
-    "mocha": "^2.2.1",
+    "mocha": "^2.2.4",
+    "pre-commit": "^1.0.7",
+    "express": "^4.9.6",
     "supertest": "^0.15.0"
   }
 }
