@@ -306,4 +306,24 @@ describe('wkj', function() {
             });
         });
     });
+
+    describe('HTTP headers support', function() {
+        it('should response with the given headers', function(done) {
+            var options = {
+                headers: {
+                    'Content-Type': 'application/test+json'
+                }
+            };
+            var middleware = wkj(options, {foo: 'bar'});
+            app.use(middleware);
+
+            request(app)
+                .get('/.well-known/foo')
+                .expect(function(res) {
+                    expect(res.headers['content-type']).to
+                        .contain('application/test+json');
+                })
+                .end(done);
+        });
+    });
 });

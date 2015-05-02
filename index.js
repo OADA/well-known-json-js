@@ -60,6 +60,10 @@ function wellKnownJSON(options, resources) {
                     return res.status(406).send('Not Acceptable');
                 }
 
+                if (options.headers) {
+                    res.set(options.headers);
+                }
+
                 return res.json(resourceify(json[m[1]]));
             });
         });
