@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-'use strict';
+'use strict'
 
-var express = require('express');
-var wkj = require('../');
+var express = require('express')
+var wkj = require('../')
 
-var service = express();
-service.set('json spaces', 2);
+var service = express()
+service.set('json spaces', 2)
 
-var middleware = wkj({}, {foo:{test: 'a/b/c', foo: './bar'}});
+var middleware = wkj({}, { foo: { test: 'a/b/c', foo: './bar' } })
 
-service.use(middleware);
+service.use(middleware)
 
 middleware.addResource('hello', {
     world: 'stuff',
@@ -33,12 +33,12 @@ middleware.addResource('hello', {
         b: 2
     },
     arr: [1, 2, 3],
-    n: (function() {
-        var n = 0;
-        return function() {
-            return n++;
-        };
+    n: (function () {
+        var n = 0
+        return function () {
+            return n++
+        }
     })()
-});
+})
 
-service.listen(3000);
+service.listen(3000)

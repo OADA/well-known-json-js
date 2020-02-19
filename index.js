@@ -13,110 +13,121 @@
  * limitations under the License.
  */
 
-'use strict';
+'use strict'
 
-var objectAssign = require('object-assign');
-var URI = require('URIjs');
-var cors = require('cors');
-var allow = require('allow-methods');
+var objectAssign = require('object-assign')
+var URI = require('urijs')
+var cors = require('cors')
+var allow = require('allow-methods')
 
-var WELL_KNOWN = /^\/\.well-known\/(.*)/;
-var RELATIVE = /^\.\.?\//;
-var METHODS = ['OPTIONS', 'GET', 'HEAD'];
+var WELL_KNOWN = /^\/\.well-known\/(.*)/
+var RELATIVE = /^\.\.?\//
+var METHODS = ['OPTIONS', 'GET', 'HEAD']
 
-function makeCorsOpts(opts) {
-    return objectAssign({methods: METHODS}, opts || {});
+function makeCorsOpts (opts) {
+    return objectAssign({ methods: METHODS }, opts || {})
 }
 
-function wellKnownJSON(options, resources) {
-    var json = objectAssign({}, resources || {});
-    options = options || {};
-    var corsOptions = typeof options.cors === 'function' ?
-        function(req, callback) {
-            options.cors(req, function(err, opts) {
-                callback(err, makeCorsOpts(opts));
-            });
-        } :
-        makeCorsOpts(options.cors);
-    var allowMiddleware = allow(METHODS);
-    var corsMiddleware = cors(corsOptions);
+function wellKnownJSON (options, resources) {
+    var json = objectAssign({}, resources || {})
+    options = options || {}
+    var corsOptions =
+        typeof options.cors === 'function'
+            ? function (req, callback) {
+                  options.cors(req, function (err, opts) {
+                      callback(err, makeCorsOpts(opts))
+                  })
+              }
+            : makeCorsOpts(options.cors)
+    var allowMiddleware = allow(METHODS)
+    var corsMiddleware = cors(corsOptions)
 
-    var middleware = function wkjMiddleware(req, res, next) {
-        var m = req.path.match(WELL_KNOWN);
-        var base = options.baseUri ||
-                (req.headers['x-forwarded-proto'] || req.protocol) + '://' +
-                (req.headers['x-forwarded-host'] || req.headers.host);
+    var middleware = function wkjMiddleware (req, res, next) {
+        var m = req.path.match(WELL_KNOWN)
+        var base =
+            options.baseUri ||
+            (req.headers['x-forwarded-proto'] || req.protocol) +
+                '://' +
+                (req.headers['x-forwarded-host'] || req.headers.host)
 
         if (!m || !m[1] || !json[m[1]]) {
-            return next();
+            return next()
         }
 
-        allowMiddleware(req, res, function(err) {
-            if (err) { return next(err); }
-            corsMiddleware(req, res, function(err) {
-                if (err) { return next(err); }
+        allowMiddleware(req, res, function (err) {
+            if (err) {
+                return next(err)
+            }
+            corsMiddleware(req, res, function (err) {
+                if (err) {
+                    return next(err)
+                }
 
                 if (!req.accepts('json')) {
-                    return res.status(406).send('Not Acceptable');
+                    return res.status(406).send('Not Acceptable')
                 }
 
                 if (options.headers) {
-                    res.set(options.headers);
+                    res.set(options.headers)
                 }
 
-                return res.json(resourceify(json[m[1]]));
-            });
-        });
+                return res.json(resourceify(json[m[1]]))
+            })
+        })
 
-        function resourceify(obj) {
-            var out = {};
+        function resourceify (obj) {
+            var out = {}
 
             for (var key in obj) {
                 /* istanbul ignore else */
-                if (obj.hasOwnProperty(key)) {
-                    out[key] = resourceifyify(obj[key]);
+                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                    out[key] = resourceifyify(obj[key])
                 }
             }
 
-            return out;
+            return out
 
-            function resourceifyify(val) {
-                var out = val;
+            function resourceifyify (val) {
+                var out = val
 
                 switch (typeof val) {
-                case 'string':
-                    if (val.match(RELATIVE)) {
-                        /* Resolve relative URIs */
-                        out = URI(val).absoluteTo(base).toString();
-                    }
-                    break;
-                case 'object':
-                    if (Object.prototype.toString.call(val) ===
-                            '[object Array]') {
-                        /* Run on array values */
-                        out = val.map(resourceifyify);
-                    } else {
-                        /* Recurse through nested objects */
-                        out = resourceify(val);
-                    }
-                    break;
-                case 'function':
-                    /* Call functions */
-                    out = resourceifyify(val(req, res));
-                    break;
+                    case 'string':
+                        if (val.match(RELATIVE)) {
+                            /* Resolve relative URIs */
+                            out = URI(val)
+                                .absoluteTo(base)
+                                .toString()
+                        }
+                        break
+                    case 'object':
+                        if (
+                            Object.prototype.toString.call(val) ===
+                            '[object Array]'
+                        ) {
+                            /* Run on array values */
+                            out = val.map(resourceifyify)
+                        } else {
+                            /* Recurse through nested objects */
+                            out = resourceify(val)
+                        }
+                        break
+                    case 'function':
+                        /* Call functions */
+                        out = resourceifyify(val(req, res))
+                        break
                 }
 
-                return out;
+                return out
             }
         }
-    };
+    }
 
     /* Add Well-Known resource, merging with any preexisting ones */
-    middleware.addResource = function(uri, obj) {
-        json[uri] = objectAssign(json[uri] || {}, obj);
-    };
+    middleware.addResource = function (uri, obj) {
+        json[uri] = objectAssign(json[uri] || {}, obj)
+    }
 
-    return middleware;
+    return middleware
 }
 
-module.exports = wellKnownJSON;
+module.exports = wellKnownJSON
