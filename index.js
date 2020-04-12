@@ -46,7 +46,9 @@ function wellKnownJSON (options, resources) {
         var m = req.path.match(WELL_KNOWN)
         var base =
             options.baseUri ||
-            (req.headers['x-forwarded-proto'] || req.protocol) +
+            (options.forceProtocol ||
+                req.headers['x-forwarded-proto'] ||
+                req.protocol) +
                 '://' +
                 (req.headers['x-forwarded-host'] || req.headers.host)
 
