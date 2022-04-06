@@ -1,5 +1,6 @@
-/*
- * Copyright 2014 Open Ag Data Alliance
+/**
+ * @license
+ * Copyright 2014-2022 Open Ag Data Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +15,29 @@
  * limitations under the License.
  */
 
-'use strict'
+import express from 'express';
+import { middleware as wkj } from '../dist';
 
-var express = require('express')
-var wkj = require('../')
+const app = express();
+app.set('json spaces', 2);
 
-var service = express()
-service.set('json spaces', 2)
+const middleware = wkj({ foo: { test: 'a/b/c', foo: './bar' } }, {});
 
-var middleware = wkj({}, { foo: { test: 'a/b/c', foo: './bar' } })
-
-service.use(middleware)
+app.use(middleware);
 
 middleware.addResource('hello', {
-    world: 'stuff',
-    obj: {
-        a: 1,
-        b: 2
-    },
-    arr: [1, 2, 3],
-    n: (function () {
-        var n = 0
-        return function () {
-            return n++
-        }
-    })()
-})
+  world: 'stuff',
+  obj: {
+    a: 1,
+    b: 2,
+  },
+  arr: [1, 2, 3],
+  n: (function () {
+    let n = 0;
+    return function () {
+      return n++;
+    };
+  })(),
+});
 
-service.listen(3000)
+app.listen();

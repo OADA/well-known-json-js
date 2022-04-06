@@ -8,14 +8,16 @@ Status](https://david-dm.org/oada/well-known-json-js.svg)](https://david-dm.org/
 
 # well-known-json
 
-## Illustraive usage example
+## Illustrative usage example
 
-```javascript
-var app = require('express')()
-var wkj = require('well-known-json')
+```typescript
+import express from 'express';
+import wkj from 'well-known-json';
 
-// Each resource will be a separate JSON resource under the well-known enpoint
-var resources = {
+const app = express();
+
+// Each resource will be a separate JSON resource under the well-known endpoint
+const resources = {
   'foo/bar': {
     // Will be at .well-known/foo/bar
     a: 1,
@@ -28,7 +30,7 @@ var resources = {
       now: function () {
         return Date.now()
       },
-      // String properties which look like relative URIs are converted to absolute URIs
+      // String properties that look like relative URIs are converted to absolute URIs
       uri: './relative/path'
     },
     // Other things become JSON normally
@@ -37,7 +39,7 @@ var resources = {
 }
 
 // Options for well-known-json middleware (and middlewares it uses)
-var options = {
+const options = {
   // Passed directly to cors middleware
   cors: {
     /* whatever you can give the cors middleware */
@@ -48,7 +50,7 @@ var options = {
 }
 
 // Create a middleware instance
-var wkjMiddleware = wkj(options, resources)
+const wkjMiddleware = wkj(resources, options)
 
 // Mount the middleware with express
 app.use(wkjMiddleware)
