@@ -50,8 +50,8 @@ export default function wellKnownJSON(
   const allowMiddleware = util.promisify(allow(options.methods ?? METHODS));
   const corsMiddleware = util.promisify(cors(corsOptions));
 
-  const middleware: RequestHandler = async (request, response, next) => {
-    try {
+  const middleware: RequestHandler = (request, response, next) => {
+    async function handler() {
       const m = WELL_KNOWN.exec(request.path);
       const base = `${
         options.forceProtocol ??
@@ -66,7 +66,6 @@ export default function wellKnownJSON(
       const match = m?.[1] && wkj.getResource(m[1], base, request, response);
       if (match === undefined) {
         // Pass to next middleware
-        next();
         return;
       }
 
@@ -79,11 +78,16 @@ export default function wellKnownJSON(
       }
 
       return response.json(match);
-    } catch (error: unknown) {
-      next(error);
-      // eslint-disable-next-line no-useless-return
-      return;
     }
+
+    handler()
+      // eslint-disable-next-line github/no-then, promise/always-return
+      .then(() => {
+        // eslint-disable-next-line promise/no-callback-in-promise
+        next();
+      })
+      // eslint-disable-next-line github/no-then, promise/no-callback-in-promise
+      .catch(next);
   };
 
   return Object.assign(middleware, { addResource: wkj.addResource.bind(wkj) });
