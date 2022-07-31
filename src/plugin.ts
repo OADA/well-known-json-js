@@ -29,7 +29,7 @@ export interface Options extends BaseOptions {
 }
 
 export default fp<Options>(
-  (fastify, { resources = {}, ...options }) => {
+  async (fastify, { resources = {}, ...options }) => {
     const wkj = new WellKnownJSON<FastifyRequest, FastifyReply>(
       resources,
       options
