@@ -258,11 +258,11 @@ __metadata:
     "@ava/typescript": ^3.0.1
     "@fastify/accepts": ^4.0.0
     "@fastify/cors": ^8.0.0
-    "@tsconfig/node14": ^1.0.3
+    "@tsconfig/node16": ^1.0.3
     "@types/accepts": ^1.3.5
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
-    "@types/node": 14.18.23
+    "@types/node": ^16.11.47
     "@types/supertest": ^2.0.12
     "@types/urijs": ^1.19.19
     "@typescript-eslint/eslint-plugin": ^5.31.0
@@ -332,10 +332,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/node14@npm:^1.0.3":
+"@tsconfig/node16@npm:^1.0.3":
   version: 1.0.3
-  resolution: "@tsconfig/node14@npm:1.0.3"
-  checksum: 19275fe80c4c8d0ad0abed6a96dbf00642e88b220b090418609c4376e1cef81bf16237bf170ad1b341452feddb8115d8dd2e5acdfdea1b27422071163dc9ba9d
+  resolution: "@tsconfig/node16@npm:1.0.3"
+  checksum: 3a8b657dd047495b7ad23437d6afd20297ce90380ff0bdee93fc7d39a900dbd8d9e26e53ff6b465e7967ce2adf0b218782590ce9013285121e6a5928fbd6819f
   languageName: node
   linkType: hard
 
@@ -491,10 +491,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:14.18.23":
-  version: 14.18.23
-  resolution: "@types/node@npm:14.18.23"
-  checksum: 119d5ab18426694ade0d3feefbdb42afc5a47b9144e523293f1554f9d34b41c7f21eafc9d0f1295db5700d134aa74e7fd37556e9438f6d64dbeddf791527e1e4
+"@types/node@npm:*, @types/node@npm:^16.11.47":
+  version: 16.11.47
+  resolution: "@types/node@npm:16.11.47"
+  checksum: 26811000753fd1bb9a90a563fc72942ac3ad5d5b6c97609a090c1e24210e040597ba060e55a7a46cb22cc84dafee112d741f45652139c6166e8ce0c970b4f05a
   languageName: node
   linkType: hard
 

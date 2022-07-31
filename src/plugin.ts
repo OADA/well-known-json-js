@@ -66,9 +66,9 @@ export default fp<Options>(
   {
     fastify: '>=3',
     name: 'well-known-json',
-    dependencies: ['@fastify/cors'],
+    dependencies: ['@fastify/cors', '@fastify/accepts'],
     decorators: {
-      request: ['@fastify/accepts'],
+      request: ['accepts'],
     },
   }
 );
