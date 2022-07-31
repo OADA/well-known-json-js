@@ -1,6 +1,7 @@
 root: true
 
 extends:
+  - 'plugin:@typescript-eslint/recommended'
   - plugin:node/recommended
   - plugin:github/recommended
   - plugin:promise/recommended
@@ -80,6 +81,17 @@ overrides:
         ]
       '@typescript-eslint/restrict-template-expressions': off
       '@typescript-eslint/no-shadow': warn
+      '@typescript-eslint/no-unused-vars':
+        [
+          warn,
+          {
+            args: after-used,
+            ignoreRestSiblings: true,
+            varsIgnorePattern: '^_',
+            argsIgnorePattern: '^_',
+          },
+        ]
+      '@typescript-eslint/consistent-type-definitions': [warn, interface]
 
 rules:
   notice/notice:

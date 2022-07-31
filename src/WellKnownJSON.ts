@@ -19,9 +19,41 @@ import URI from 'urijs';
 
 const RELATIVE = /^\.\.?\//;
 
-export type Options = {
+export interface Options {
   baseUri?: string;
-};
+}
+
+type Collection<T> = Record<string, T> | Iterable<[string, T]>;
+type Resources = Collection<Collection<unknown>>;
+
+function isIterable<T>(value: unknown): value is Iterable<T> {
+  return typeof value === 'object' && Symbol.iterator in (value ?? {});
+}
+
+interface Entries<K, V> {
+  entries(): Iterable<[K, V]>;
+}
+function hasEntries<K, V>(value: unknown): value is Entries<K, V> {
+  return (
+    typeof value === 'object' &&
+    // @ts-expect-error stuff
+    typeof value?.entries === 'function'
+  );
+}
+
+function normalize<T>(
+  collection: Collection<Collection<T>>
+): Map<string, Map<string, T>> {
+  const entries = isIterable(collection)
+    ? collection
+    : Object.entries(collection);
+  return new Map(
+    Array.from(entries, ([k, v]) => [
+      k,
+      new Map(isIterable(v) ? v : Object.entries(v)),
+    ])
+  );
+}
 
 export class WellKnownJSON<In = unknown, Out = unknown> {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -30,12 +62,9 @@ export class WellKnownJSON<In = unknown, Out = unknown> {
   #base;
   #json;
 
-  constructor(
-    resources: Record<string, Record<string, unknown>>,
-    options: Options = {}
-  ) {
+  constructor(resources: Resources, options: Options = {}) {
     this.#base = options.baseUri;
-    this.#json = new Map(Object.entries(resources));
+    this.#json = normalize(resources);
   }
 
   /**
@@ -62,12 +91,22 @@ export class WellKnownJSON<In = unknown, Out = unknown> {
               new URI(value, base).toString()
             : value;
 
-        case 'object':
-          return Array.isArray(value)
-            ? value.map((element) => resourceify(element))
-            : Object.fromEntries(
-                Object.entries(value!).map(([k, v]) => [k, resourceify(v)])
-              );
+        case 'object': {
+          if (!value) {
+            return value;
+          }
+
+          if (Array.isArray(value)) {
+            return value.map((element) => resourceify(element));
+          }
+
+          const entries = hasEntries(value)
+            ? value.entries()
+            : Object.entries(value);
+          return Object.fromEntries(
+            Array.from(entries, ([k, v]) => [k, resourceify(v)])
+          );
+        }
 
         case 'function':
           /* Call functions */
@@ -82,7 +121,10 @@ export class WellKnownJSON<In = unknown, Out = unknown> {
   /**
    * Add Well-Known resource, merging with any preexisting ones
    */
-  addResource(uri: string, object: Record<string, unknown>) {
-    this.#json.set(uri, { ...this.#json.get(uri), ...object });
+  addResource(uri: string, collection: Collection<unknown>) {
+    const entries = isIterable(collection)
+      ? collection
+      : Object.entries(collection);
+    this.#json.set(uri, new Map([...(this.#json.get(uri) ?? []), ...entries]));
   }
 }

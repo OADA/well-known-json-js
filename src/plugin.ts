@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 
-import type {} from 'fastify-accepts';
+import type {} from '@fastify/accepts';
 import type { FastifyReply, FastifyRequest, HTTPMethods } from 'fastify';
 import fp from 'fastify-plugin';
 
 import { Options as BaseOptions, WellKnownJSON } from './WellKnownJSON.js';
 
 export interface Options extends BaseOptions {
-  methods: readonly HTTPMethods[];
-  resources: Record<string, Record<string, unknown>>;
+  methods?: readonly HTTPMethods[];
+  resources?: Record<string, Record<string, unknown>>;
   forceProtocol?: string;
   headers?: Record<string, string>;
 }
 
 export default fp<Options>(
-  (fastify, { resources, ...options }) => {
+  (fastify, { resources = {}, ...options }) => {
     const wkj = new WellKnownJSON<FastifyRequest, FastifyReply>(
       resources,
       options
@@ -39,14 +39,14 @@ export default fp<Options>(
     fastify.route({
       url: '/.well-known/',
       method,
-      async handler(request, reply) {
+      handler(request, reply) {
         const accepts = request.accepts();
         if (!accepts.type(['json'])) {
           return reply.status(406).send('Not Acceptable');
         }
 
         if (options.headers) {
-          await reply.headers(options.headers);
+          void reply.headers(options.headers);
         }
 
         const base = `${
@@ -54,12 +54,7 @@ export default fp<Options>(
           request.headers['x-forwarded-proto'] ??
           request.protocol
         }://${request.headers['x-forwarded-host'] ?? request.headers.host}`;
-        const resource = await wkj.getResource(
-          request.url,
-          base,
-          request,
-          reply
-        );
+        const resource = wkj.getResource(request.url, base, request, reply);
         if (resource === undefined) {
           return reply.code(404).send();
         }
@@ -69,11 +64,11 @@ export default fp<Options>(
     });
   },
   {
-    fastify: '3.x',
+    fastify: '>=3',
     name: 'well-known-json',
-    dependencies: ['fastify-cors'],
+    dependencies: ['@fastify/cors'],
     decorators: {
-      request: ['fastify-accepts'],
+      request: ['@fastify/accepts'],
     },
   }
 );

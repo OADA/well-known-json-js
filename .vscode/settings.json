@@ -27,7 +27,9 @@
     ".dccache": true,
     ".yarn": true,
     ".pnp.*": true,
-    "*.tsbuildinfo": true
+    "*.tsbuildinfo": true,
+    "**/.yarn": true,
+    "**/.pnp.*": true
   },
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",

@@ -21,22 +21,22 @@ const resources = {
   'foo/bar': {
     // Will be at .well-known/foo/bar
     a: 1,
-    b: 2
+    b: 2,
   },
-  baz: {
+  'baz': {
     // Will be at .well-known/baz
     obj: {
       // Function properties are evaluated for each response generated
       now: function () {
-        return Date.now()
+        return Date.now();
       },
       // String properties that look like relative URIs are converted to absolute URIs
-      uri: './relative/path'
+      uri: './relative/path',
     },
     // Other things become JSON normally
-    str: 'words here'
-  }
-}
+    str: 'words here',
+  },
+};
 
 // Options for well-known-json middleware (and middlewares it uses)
 const options = {
@@ -46,21 +46,21 @@ const options = {
   },
   // Optional base for resolving relative URIs
   // If omitted, wkj will use the protocol and host to which the request was sent
-  baseUri: 'http://example.org/foo'
-}
+  baseUri: 'http://example.org/foo',
+};
 
 // Create a middleware instance
-const wkjMiddleware = wkj(resources, options)
+const wkjMiddleware = wkj(resources, options);
 
 // Mount the middleware with express
-app.use(wkjMiddleware)
+app.use(wkjMiddleware);
 
 // Add additional resources after creation
 // They will be merged with a prexisting resource with the same name
 wkjMiddleware.addResource('baz', {
   more: 'stuff', // Add key more to baz
-  str: 'different words here' // Overwrite key str in baz from before
-})
+  str: 'different words here', // Overwrite key str in baz from before
+});
 ```
 
 ## Features
