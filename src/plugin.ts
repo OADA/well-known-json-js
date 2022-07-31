@@ -37,7 +37,7 @@ export default fp<Options>(
 
     const method = Array.from(options.methods ?? WellKnownJSON.METHODS);
     fastify.route({
-      url: '/.well-known/',
+      url: '/.well-known/:name',
       method,
       handler(request, reply) {
         const accepts = request.accepts();
@@ -49,12 +49,13 @@ export default fp<Options>(
           void reply.headers(options.headers);
         }
 
+        const { name } = request.params as { name: string };
         const base = `${
           options.forceProtocol ??
           request.headers['x-forwarded-proto'] ??
           request.protocol
         }://${request.headers['x-forwarded-host'] ?? request.headers.host}`;
-        const resource = wkj.getResource(request.url, base, request, reply);
+        const resource = wkj.getResource(name, base, request, reply);
         if (resource === undefined) {
           return reply.code(404).send();
         }

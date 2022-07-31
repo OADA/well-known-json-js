@@ -35,13 +35,7 @@
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": [
-    "fastify",
-    "lcov",
-    "resourceify",
-    "sonarjs",
-    "urijs"
-  ],
+  "cSpell.words": ["fastify", "lcov", "resourceify", "sonarjs", "urijs"],
   "explorerExclude.backup": null,
   "npm.packageManager": "yarn",
   "debug.javascript.autoAttachFilter": "smart",
