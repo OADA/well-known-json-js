@@ -24,7 +24,6 @@ import { Options as BaseOptions, WellKnownJSON } from './WellKnownJSON.js';
 export interface Options extends BaseOptions {
   methods?: readonly HTTPMethods[];
   resources?: Record<string, Record<string, unknown>>;
-  forceProtocol?: string;
   headers?: Record<string, string>;
 }
 
@@ -50,11 +49,7 @@ export default fp<Options>(
         }
 
         const { name } = request.params as { name: string };
-        const base = `${
-          options.forceProtocol ??
-          request.headers['x-forwarded-proto'] ??
-          request.protocol
-        }://${request.headers['x-forwarded-host'] ?? request.headers.host}`;
+        const base = `${request.protocol}://${request.hostname}`;
         const resource = wkj.getResource(name, base, request, reply);
         if (resource === undefined) {
           return reply.code(404).send();
