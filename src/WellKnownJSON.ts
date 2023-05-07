@@ -85,11 +85,12 @@ export class WellKnownJSON<In = unknown, Out = unknown> {
       }
 
       switch (typeof value) {
-        case 'string':
+        case 'string': {
           return RELATIVE.test(value)
             ? // eslint-disable-next-line @typescript-eslint/no-base-to-string
               new URI(value, base).toString()
             : value;
+        }
 
         case 'object': {
           if (!value) {
@@ -108,12 +109,14 @@ export class WellKnownJSON<In = unknown, Out = unknown> {
           );
         }
 
-        case 'function':
+        case 'function': {
           /* Call functions */
           return resourceify(value(...rest));
+        }
 
-        default:
+        default: {
           return value;
+        }
       }
     }
   }

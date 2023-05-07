@@ -16,7 +16,7 @@
  */
 
 module 'allow-methods' {
-  import { RequestHandler } from 'express';
+  import { type RequestHandler } from 'express';
   function allowMethods(
     methods: readonly string[],
     message?: string

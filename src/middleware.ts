@@ -21,7 +21,7 @@ import type { Request, RequestHandler, Response } from 'express';
 import allow from 'allow-methods';
 import cors from 'cors';
 
-import { Options as BaseOptions, WellKnownJSON } from './WellKnownJSON.js';
+import { type Options as BaseOptions, WellKnownJSON } from './WellKnownJSON.js';
 
 export interface Options extends BaseOptions {
   methods?: readonly string[];
@@ -59,15 +59,15 @@ export default function wellKnownJSON(
         request.protocol
       }://${request.headers['x-forwarded-host'] ?? request.headers.host}`;
 
-      await allowMiddleware(request, response);
-
-      await corsMiddleware(request, response);
-
       const match = m?.[1] && wkj.getResource(m[1], base, request, response);
       if (match === undefined) {
         // Pass to next middleware
         return;
       }
+
+      await allowMiddleware(request, response);
+
+      await corsMiddleware(request, response);
 
       if (!request.accepts('json')) {
         return response.status(406).send('Not Acceptable');

@@ -19,7 +19,7 @@ import type {} from '@fastify/accepts';
 import type { FastifyReply, FastifyRequest, HTTPMethods } from 'fastify';
 import fp from 'fastify-plugin';
 
-import { Options as BaseOptions, WellKnownJSON } from './WellKnownJSON.js';
+import { type Options as BaseOptions, WellKnownJSON } from './WellKnownJSON.js';
 
 export interface Options extends BaseOptions {
   methods?: readonly HTTPMethods[];

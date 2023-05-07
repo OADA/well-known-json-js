@@ -17,10 +17,10 @@
 
 import test from 'ava';
 
-import express, { ErrorRequestHandler } from 'express';
+import express, { type ErrorRequestHandler } from 'express';
 import request from 'supertest';
 
-import wkj, { Options } from '../../dist/middleware.js';
+import wkj, { type Options } from '../../dist/middleware.js';
 
 test('should export a function which returns a middleware', (t) => {
   t.assert(typeof wkj === 'function');
