@@ -20,7 +20,7 @@ import test from 'ava';
 import express from 'express';
 import request from 'supertest';
 
-import wkj from '../../dist/middleware.js';
+import { wellKnownJSON as wkj } from '../../dist/middleware.js';
 
 test('should respect X-Forwarded-Proto', async (t) => {
   const app = express();

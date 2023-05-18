@@ -20,7 +20,7 @@ import test from 'ava';
 import express, { type ErrorRequestHandler } from 'express';
 import request from 'supertest';
 
-import wkj, { type Options } from '../../dist/middleware.js';
+import { type Options, wellKnownJSON as wkj } from '../../dist/middleware.js';
 
 test('should export a function which returns a middleware', (t) => {
   t.assert(typeof wkj === 'function');
@@ -73,7 +73,7 @@ test('should return JSON', async (t) => {
 
   const response = await request(app).get('/.well-known/foo');
   t.is(response.statusCode, 200);
-  t.regex(response.headers['content-type'], /json/);
+  t.regex(`${response.headers['content-type']}`, /json/);
 });
 
 test('should return Not Acceptable for non-JSON Accept', async (t) => {
@@ -104,5 +104,5 @@ test('should respond with the given headers', async (t) => {
   app.use(middleware);
 
   const response = await request(app).get('/.well-known/foo');
-  t.regex(response.headers['content-type'], /^application\/test\+json/);
+  t.regex(`${response.headers['content-type']}`, /^application\/test\+json/);
 });

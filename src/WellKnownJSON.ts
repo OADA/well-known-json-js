@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-import URI from 'urijs';
-
 const RELATIVE = /^\.\.?\//;
 
 export interface Options {
@@ -86,10 +84,7 @@ export class WellKnownJSON<In = unknown, Out = unknown> {
 
       switch (typeof value) {
         case 'string': {
-          return RELATIVE.test(value)
-            ? // eslint-disable-next-line @typescript-eslint/no-base-to-string
-              new URI(value, base).toString()
-            : value;
+          return RELATIVE.test(value) ? new URL(value, base).toString() : value;
         }
 
         case 'object': {

@@ -27,7 +27,7 @@ export interface Options extends BaseOptions {
   headers?: Record<string, string>;
 }
 
-export default fp<Options>(
+export const plugin = fp<Options>(
   async (fastify, { resources = {}, ...options }) => {
     const wkj = new WellKnownJSON<FastifyRequest, FastifyReply>(
       resources,

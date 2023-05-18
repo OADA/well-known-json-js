@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-export { default as middleware } from './middleware.js';
+export { wellKnownJSON as middleware } from './middleware.js';
 
-export { default as plugin } from './plugin.js';
+export { plugin } from './plugin.js';
 
 export { WellKnownJSON } from './WellKnownJSON.js';

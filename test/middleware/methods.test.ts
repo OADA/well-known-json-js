@@ -20,7 +20,7 @@ import test from 'ava';
 import express from 'express';
 import request from 'supertest';
 
-import wkj from '../../dist/middleware.js';
+import { wellKnownJSON as wkj } from '../../dist/middleware.js';
 
 const app = express();
 const middleware = wkj({ foo: { a: 1, b: 2 } });

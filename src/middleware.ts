@@ -33,7 +33,7 @@ export interface Options extends BaseOptions {
 const WELL_KNOWN = /^\/\.well-known\/(.*)/;
 const METHODS = ['OPTIONS', 'GET', 'HEAD'];
 
-export default function wellKnownJSON(
+export function wellKnownJSON(
   resources: Record<string, Record<string, unknown>>,
   options: Options = {}
 ) {
